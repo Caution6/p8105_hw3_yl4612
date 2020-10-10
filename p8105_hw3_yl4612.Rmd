@@ -142,3 +142,26 @@ accel_df %>%
   )
 ```
 
+Trend apparent:
+
+On Tuesday, Wednesday, and Thursday, total activities over the day are relatively stable. In weekend, there is an apparent trend of decrease.
+
+Make a single panel plot.
+
+```{r s_p_p}
+accel_df %>% 
+	ggplot(aes(x = minute_of_the_day, y = activity_count, color = day)) +
+  geom_smooth(se = FALSE) + 
+	labs(
+	  title = 'Activity counts for each minute of a 24-hour day',
+	  x = 'minute of the day',
+		y = 'activity count'
+		)
+```
+
+Describe any patterns or conclusions I can make based on this graph:
+
+From the plot, the 63 year-old male might sleep from 11:30 p.m to 7:00 a.m. On Sunday, he is more active than the other days in the morning. On Sunday and Tuesday, he is less active than the other days in the evening. 
+
+### Problem 3
+
