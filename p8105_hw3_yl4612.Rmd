@@ -8,6 +8,7 @@ output: github_document
 ```{r set_up, include = FALSE}
 library(tidyverse)
 library(p8105.datasets)
+library(patchwork)
 
 knitr::opts_chunk$set(
   fig.width = 6,
@@ -207,7 +208,7 @@ The most commonly observed value for snowfall is 0. For most of the time, there 
 
 Make a two-panel plot.
 
-```{r t_p_p}
+```{r t_p_p_1}
 ny_cli %>% 
   filter(month %in% c("01", "07")) %>% 
   filter(!is.na(tmax_c)) %>%
@@ -224,5 +225,39 @@ ny_cli %>%
   ) +
   facet_grid(. ~ month) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+```
+
+Observable / interpretable structure and outliers:
+
+Generally, the average maximum temperature is increasing in January. There is also a "tide" pattern can be observed. Every 10 to 12 years, there are years apparently colder than others around it. Examples include 1982, 1994, and 2004. In January of 1982, 1993, and 2005, the outliers indicate that some place of NY is much colder than the other places. 
+
+Generally, the average maximum temperature is quite stable in July. In July of 1988, the outlier indicates that some place of NY is much colder than the other places.
+
+Make a two-panel plot.
+
+```{r t_p_p_2}
+tmax_vs_tmin = 
+  ny_cli %>% 
+	ggplot(aes(x = tmin_c, y = tmax_c)) +
+	geom_smooth() +
+	labs(
+	  title = "Maximum temp vs Minimum temp",
+		x = "minimum temperature",
+		y = "maximum temperature"
+	)
+
+dis_snowfall = 
+  ny_cli %>% 
+  filter(snow_mm > 0, snow_mm < 100) %>% 
+	ggplot(aes(x = year, y = snow_mm)) +
+	geom_boxplot() +
+	labs(
+	  title = "Distribution of snowfall",
+	  x = "year",
+		y = "snowfall"
+	) +
+	theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+tmax_vs_tmin + dis_snowfall
 ```
 
