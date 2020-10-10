@@ -33,6 +33,8 @@ scale_fill_discrete = scale_fill_viridis_d
 data("instacart")
 ```
 
+Short description of the dataset:
+
 This dataset contains `r nrow(instacart)` rows and `r ncol(instacart)` columns.
 
 Observations are the level of items in orders by user. There are user / order variables -- user ID, order ID, order day and order hour. There are also item variables -- name, aisle, department, and some numeric codes.
@@ -60,7 +62,7 @@ instacart %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 ```
 
-Let's make a table!
+Let's make a table.
 
 ```{r}
 instacart %>% 
@@ -88,9 +90,43 @@ instacart %>%
 
 ### Problem 2
 
+Load, tidy and otherwise wrangle the data.
 
-
-```{r}
-
+```{r l_t_w}
+accel_df =
+  read_csv("./accel_data.csv") %>% 
+  janitor::clean_names() %>% 
+  pivot_longer(
+    activity_1:activity_1440,
+    names_to = "minute_of_the_day",
+    names_prefix = "activity_",
+    values_to = "activity_count"
+  ) %>% 
+  mutate(
+    day = factor(
+      day, 
+      levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+      ),
+    minute_of_the_day = as.numeric(minute_of_the_day),
+    weekday_vs_weekend = recode(
+      day,
+      Monday = "weekday",
+      Tuesday = "weekday",
+      Wednesday = "weekday",
+      Thursday = "weekday",
+      Friday = "weekday",
+      Saturday = "weekend",
+      Sunday = "weekend"
+    ),
+    weekday_vs_weekend = factor(weekday_vs_weekend)
+  ) %>% 
+  arrange(week, day) %>% 
+  select(-day_id)
 ```
+
+Describe the resulting dataset:
+
+The resulting dataset contains variables including `r colnames(accel_df)`. I arrange the dataset according to "week" variable firstly, then by "day" variable. "minute_of_the_day" variable shows each minute at specific day of the specifc week. "activity_count" variable shows activity counts for each minute of a 24-hour day starting at midnight. "weekday_vs_weekend" variable shows type of this day.
+
+In total, there are `r nrow(accel_df)` observations. 
 
