@@ -105,7 +105,7 @@ accel_df =
   mutate(
     day = factor(
       day, 
-      levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+      levels = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
       ),
     minute_of_the_day = as.numeric(minute_of_the_day),
     weekday_vs_weekend = recode(
@@ -129,4 +129,16 @@ Describe the resulting dataset:
 The resulting dataset contains variables including `r colnames(accel_df)`. I arrange the dataset according to "week" variable firstly, then by "day" variable. "minute_of_the_day" variable shows each minute at specific day of the specifc week. "activity_count" variable shows activity counts for each minute of a 24-hour day starting at midnight. "weekday_vs_weekend" variable shows type of this day.
 
 In total, there are `r nrow(accel_df)` observations. 
+
+Create a table showing total activity over the days.
+
+```{r c_t_d}
+accel_df %>% 
+  group_by(week, day) %>% 
+  summarize(activity_of_the_day = sum(activity_count)) %>% 
+  pivot_wider(
+    names_from = day,
+    values_from = activity_of_the_day
+  )
+```
 
